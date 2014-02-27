@@ -7,5 +7,9 @@ namespace Aventyrliga_kontakter.Model.DAL
 {
     public class ContactDAL
     {
-    }
+        //hämta kontakter från databasen
+        public IEnumerable<Contact> GetContacts { 
+        
+        }
+    }   
 }
