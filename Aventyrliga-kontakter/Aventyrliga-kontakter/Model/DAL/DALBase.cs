@@ -25,5 +25,7 @@ namespace Aventyrliga_kontakter.Model.DAL
             return conn;
         }
 
+
+
     }
 }

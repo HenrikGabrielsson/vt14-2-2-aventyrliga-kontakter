@@ -44,7 +44,7 @@ namespace Aventyrliga_kontakter.Model.DAL
                             contact.ContactId = reader.GetInt32(idIndex);
                             contact.FirstName = reader.GetString(fNameIndex);
                             contact.LastName = reader.GetString(lNameIndex);
-                            contact.EmailAdress = reader.GetString(emailIndex);
+                            contact.EmailAddress = reader.GetString(emailIndex);
 
                             //lägger till kontakterna i listan
                             contacts.Add(contact);
@@ -81,10 +81,10 @@ namespace Aventyrliga_kontakter.Model.DAL
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     //lägger till en parameter: ContactID
-                    cmd.Parameters.AddWithValue("@ContactID", id);
+                    cmd.Parameters.Add("@ContactID",SqlDbType.Int, 4).Value = id;
 
                     conn.Open();
-                    using(var reader = cmd.ExecuteReader())
+                    using(SqlDataReader reader = cmd.ExecuteReader())
                     {
                         //hämtar index för alla kolumner.
                         int idIndex = reader.GetOrdinal("ContactID");
@@ -92,7 +92,7 @@ namespace Aventyrliga_kontakter.Model.DAL
                         int lNameIndex = reader.GetOrdinal("LastName");
                         int emailIndex = reader.GetOrdinal("EmailAddress");
 
-                        while (reader.Read())
+                        if (reader.Read())
                         {
                             //kontakt som ska returneras
                             Contact retContact = new Contact();
@@ -101,15 +101,16 @@ namespace Aventyrliga_kontakter.Model.DAL
                             retContact.ContactId = reader.GetInt32(idIndex);
                             retContact.FirstName = reader.GetString(fNameIndex);
                             retContact.LastName = reader.GetString(lNameIndex);
-                            retContact.EmailAdress = reader.GetString(emailIndex);
+                            retContact.EmailAddress = reader.GetString(emailIndex);
 
                             return retContact;
                         }
-                    }
 
+                    }
+                    //Om ingen contact kunde skapas så returneras null.
+                    return null;
                 }
-                //Om ingen contact kunde skapas så returneras null.
-                return null;
+
             }
             catch
             {
@@ -117,5 +118,125 @@ namespace Aventyrliga_kontakter.Model.DAL
             }
 
         }
+
+
+        //lägg till ny kontakt i databasen
+        public void InsertContact(Contact contact)
+        {
+            try
+            {
+                //öppnar anslutning
+                using (SqlConnection conn = CreateConnection())
+                {
+
+                    //cmd innehåller info om den lagrade procedur som ska användas.
+                    var cmd = new SqlCommand("Person.uspAddContact", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //lägger till parametrar till kontakten som ska skapas
+                    cmd.Parameters.Add("@FirstName", SqlDbType.VarChar, 50).Value = contact.FirstName;
+                    cmd.Parameters.Add("@LastName", SqlDbType.VarChar, 50).Value = contact.LastName;
+                    cmd.Parameters.Add("@EmailAddress", SqlDbType.VarChar, 50).Value = contact.EmailAddress;
+
+                    //output-parametern
+                    cmd.Parameters.Add("@ContactID", SqlDbType.Int, 4).Direction = ParameterDirection.Output;
+
+                    conn.Open();
+
+                    //Den lagrade proceduren körs
+                    cmd.ExecuteNonQuery();
+
+                    //Output: Den nya kontaktens ID.
+                    contact.ContactId = (int)cmd.Parameters["@ContactID"].Value;
+
+                }
+
+            }
+            catch
+            {
+                throw new ApplicationException("Det gick inte att lägga till kontakten i databasen.");
+            }
+
+        }
+
+
+
+        //Uppdatera kontakt i databasen //EJ KLAR
+        public void UpdateContact(Contact contact)
+        {
+            try
+            {
+                //öppnar anslutning
+                using (SqlConnection conn = CreateConnection())
+                {
+
+                    //cmd innehåller info om den lagrade procedur som ska användas.
+                    var cmd = new SqlCommand("Person.uspUpdateContact", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //lägger till parametrar till kontakten som ska ändras
+                    cmd.Parameters.Add("@ContactID", SqlDbType.Int, 4).Value = contact.ContactId;
+                    cmd.Parameters.Add("@FirstName", SqlDbType.VarChar, 50).Value = contact.FirstName;
+                    cmd.Parameters.Add("@LastName", SqlDbType.VarChar, 50).Value = contact.LastName;
+                    cmd.Parameters.Add("@EmailAddress", SqlDbType.VarChar, 50).Value = contact.EmailAddress;
+
+                    cmd.Parameters.Add("@RetValue", SqlDbType.Int, 4).Direction = ParameterDirection.ReturnValue;
+
+                    conn.Open();
+
+                    //Den lagrade proceduren körs
+                    cmd.ExecuteNonQuery();
+
+                    //Output: Returvärdet visar om det fungerade eller inte
+                    int retValue = (int)cmd.Parameters["@RetValue"].Value;
+                }
+
+            }
+            catch
+            {
+                throw new ApplicationException("Det gick inte att uppdatera kontakten i databasen.");
+            }
+
+        }
+
+        //Ta bort kontakt från databasen //EJ KLAR
+        public void DeleteContact(Contact contact)
+        {
+            try
+            {
+                //öppnar anslutning
+                using (SqlConnection conn = CreateConnection())
+                {
+
+                    //cmd innehåller info om den lagrade procedur som ska användas.
+                    var cmd = new SqlCommand("Person.uspRemoveContact", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //lägger till parameter: Kontakten som ska raderas.
+                    cmd.Parameters.Add("@ContactID", SqlDbType.Int, 4).Value = contact.ContactId;
+
+                    cmd.Parameters.Add("@RetValue", SqlDbType.Int, 4).Direction = ParameterDirection.ReturnValue;
+
+                    conn.Open();
+
+                    //Den lagrade proceduren körs
+                    cmd.ExecuteNonQuery();
+
+                    //Output: Returvärdet visar om det fungerade eller inte
+                    int retValue = (int)cmd.Parameters["@RetValue"].Value;
+                }
+
+            }
+
+            catch
+            {
+                throw new ApplicationException("Det gick inte att ta bort kontakten i databasen.");
+            }
+
+        }
+       
+
+
+
     }   
 }

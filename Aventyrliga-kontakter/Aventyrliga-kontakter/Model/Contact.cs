@@ -9,7 +9,7 @@ namespace Aventyrliga_kontakter.Model
     {
         //egenskaper för kolumner i Customertabellen
         public int ContactId { get; set; }
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
