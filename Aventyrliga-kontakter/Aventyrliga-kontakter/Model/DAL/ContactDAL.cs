@@ -227,7 +227,6 @@ namespace Aventyrliga_kontakter.Model.DAL
                 }
 
             }
-
             catch
             {
                 throw new ApplicationException("Det gick inte att ta bort kontakten i databasen.");

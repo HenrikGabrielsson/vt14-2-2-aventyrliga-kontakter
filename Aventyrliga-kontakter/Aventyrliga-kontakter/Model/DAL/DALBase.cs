@@ -13,9 +13,9 @@ namespace Aventyrliga_kontakter.Model.DAL
         private static string _connectionString;
 
         //konstruktor
-        private static DALBase()
+        static DALBase()
         {
-            _connectionString = WebConfigurationManager.ConnectionStrings["ContactsConnectionString"].ConnectionString;
+            _connectionString = WebConfigurationManager.ConnectionStrings["ContactConnectionString"].ConnectionString;
         }
 
         //Funktion som returnerar anslutningssträngen
