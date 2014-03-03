@@ -24,15 +24,66 @@ namespace Aventyrliga_kontakter
 
         }
 
-        // The return type can be changed to IEnumerable, however to support
-        // paging and sorting, the following parameters must be added:
-        //     int maximumRows
-        //     int startRowIndex
-        //     out int totalRowCount
-        //     string sortByExpression
+
+
+        //Fyller tabellen med data
         public IEnumerable<Contact> ContactListView_GetData()
         {
             return Service.GetContacts();
+        }
+
+
+        //Vid skapande av ny post
+        public void ContactListView_InsertItem(Contact contact)
+        {
+            try
+            {
+                Service.SaveContact(contact);
+            }
+            catch
+            {
+                ModelState.AddModelError(String.Empty, String.Format("Det gick inte att lägga till kontakten."));
+            }
+        }
+
+
+        //Vid uppdatering av en post
+        public void ContactListView_UpdateItem(int contactID)
+        {
+            try
+            {
+                //kollar så kunden finns innan den sparas
+                var item = Service.GetContact(contactID);
+                if (item == null)
+                {
+                    ModelState.AddModelError("", String.Format("Det gick inte att uppdatera kontakten."));
+                    return;
+                }
+                TryUpdateModel(item);
+                if (ModelState.IsValid)
+                {
+                    Service.SaveContact(item);
+
+                }
+            }
+            catch
+            {
+                ModelState.AddModelError(String.Empty, String.Format("Det gick inte att uppdatera kontakten."));
+            }
+                
+        }
+
+        //Vid borttagning av en post
+        public void ContactListView_DeleteItem(int contactID)
+        {
+            try
+            {
+                Service.DeleteContact(contactID);
+            }
+            catch
+            {
+                ModelState.AddModelError(String.Empty, String.Format("Det gick inte att ta bort kontakten."));
+            }
         }
 
 

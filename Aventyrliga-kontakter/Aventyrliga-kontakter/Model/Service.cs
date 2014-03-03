@@ -25,9 +25,9 @@ namespace Aventyrliga_kontakter.Model
         }
 
         //hämta en kontakt
-        public Contact GetContact(Contact contact)
+        public Contact GetContact(int contactId)
         {
-            return ContactDAL.GetContactById(contact.ContactId);
+            return ContactDAL.GetContactById(contactId);
         }
 
 

@@ -22,7 +22,7 @@ namespace Aventyrliga_kontakter.Model.DAL
                 {
 
                     //Den lagrade proceduren uspGetContact ska användas för att hämta ut kontakterna
-                    var cmd = new SqlCommand("Person.uspGetContact", conn);
+                    var cmd = new SqlCommand("Person.uspGetContacts", conn);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     conn.Open();
