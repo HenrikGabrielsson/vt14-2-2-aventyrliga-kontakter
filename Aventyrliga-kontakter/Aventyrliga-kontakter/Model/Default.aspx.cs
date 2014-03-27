@@ -27,9 +27,9 @@ namespace Aventyrliga_kontakter
 
 
         //Fyller tabellen med data
-        public IEnumerable<Contact> ContactListView_GetData(int maximumRows, int startRowIndex, out int totalRowCount)
+        public IEnumerable<Contact> ContactListView_GetData(int startRowIndex, int maximumRows, out int totalRowCount)
         {
-            return Service.GetContactsPageWise(maximumRows, startRowIndex, out totalRowCount);
+            return Service.GetContactsPageWise(startRowIndex, maximumRows, out totalRowCount);
         }
 
 
@@ -38,7 +38,10 @@ namespace Aventyrliga_kontakter
         {
             try
             {
-                Service.SaveContact(contact);
+                if (ModelState.IsValid)
+                {
+                    Service.SaveContact(contact);
+                }
             }
             catch
             {
@@ -52,18 +55,21 @@ namespace Aventyrliga_kontakter
         {
             try
             {
-                //kollar så kunden finns innan den sparas
-                var item = Service.GetContact(contactID);
-                if (item == null)
-                {
-                    ModelState.AddModelError("", String.Format("Det gick inte att uppdatera kontakten."));
-                    return;
-                }
-                TryUpdateModel(item);
                 if (ModelState.IsValid)
                 {
-                    Service.SaveContact(item);
 
+                    //kollar så kunden finns innan den sparas
+                    var item = Service.GetContact(contactID);
+                    if (item == null)
+                    {
+                        ModelState.AddModelError("", String.Format("Det gick inte att uppdatera kontakten."));
+                        return;
+                    }
+                    
+                    if (TryUpdateModel(item))
+                    {
+                        Service.SaveContact(item);
+                    }
                 }
             }
             catch

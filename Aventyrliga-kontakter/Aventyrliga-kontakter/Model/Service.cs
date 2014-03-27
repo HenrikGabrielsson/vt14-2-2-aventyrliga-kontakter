@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using Aventyrliga_kontakter.Model.DAL;
 
-namespace Aventyrliga_kontakter.Model
+
+using System.ComponentModel.DataAnnotations;namespace Aventyrliga_kontakter.Model
 {
     public class Service
     {
@@ -59,6 +60,14 @@ namespace Aventyrliga_kontakter.Model
         //Funktion som skapar eller uppdaterar en befintlig kontakt
         public void SaveContact(Contact contact)
         {
+            //Använder en extension method för att validera kontakten med data annotations
+            ICollection<ValidationResult> validationResults;
+            if (!contact.Validate(out validationResults))
+            {
+                var ex = new ValidationException("Valideringsfel");
+                ex.Data.Add("ValidationResults", validationResults);
+                throw ex;
+            }
 
             //Om det är en ny kontakt
             if(contact.ContactId == 0)

@@ -9,6 +9,8 @@
 <body>
     <form id="form" runat="server">
     <div>
+        <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+
         <%-- Tabellen med kontakterna --%>
         <asp:ListView ID="ContactListView" runat="server" selectMethod="ContactListView_GetData" ItemType="Aventyrliga_kontakter.Model.Contact" DataKeyNames="ContactID"
             InsertMethod="ContactListView_InsertItem" UpdateMethod="ContactListView_UpdateItem" DeleteMethod="ContactListView_DeleteItem"
@@ -21,7 +23,17 @@
                         <th>Email-Adress</th>
                     </tr>
                     <asp:PlaceHolder ID="ItemPlaceholder" runat="server"></asp:PlaceHolder>
+                    <asp:DataPager ID="DataPager" runat="server" PageSize="15">
+                        <Fields>
+                            <asp:NextPreviousPagerField ShowFirstPageButton="true" ShowLastPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" FirstPageText="Första" ButtonType="Button" />
+                            <asp:NumericPagerField ButtonType="Button" />
+                            <asp:NextPreviousPagerField ShowLastPageButton="true" ShowFirstPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" LastPageText="Sista" ButtonType="Button" />
+                        </Fields>
+                    </asp:DataPager>
+
                 </table>
+
+
             </LayoutTemplate>
 
             <%-- Items --%>
