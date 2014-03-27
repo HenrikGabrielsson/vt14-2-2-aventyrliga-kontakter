@@ -28,7 +28,7 @@ namespace Aventyrliga_kontakter.Model.DAL
                     conn.Open();
 
                     //Raderna hämtas en efter en
-                    using (var reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         //hämtar index för alla kolumner.
                         int idIndex = reader.GetOrdinal("ContactID");
@@ -63,6 +63,65 @@ namespace Aventyrliga_kontakter.Model.DAL
             catch
             {
                 throw new ApplicationException("Det gick inte att hämta kontaktlistan!");
+            }
+        }
+
+        //hämta ett bestämt antal kontakter efter ett index
+        public IEnumerable<Contact> GetContactsPageWise(int maximumRows, int startRowIndex, out int totalRowCount)
+        {
+            try
+            {
+                //listan som ska fyllas med kontakterna
+                List<Contact> contacts = new List<Contact>(maximumRows);
+
+                //ansluter..
+                using(SqlConnection conn = CreateConnection())
+                {
+                    //den lagrade proceduren
+                    var cmd = new SqlCommand("Person.uspGetContactsPageWise", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //parametrar
+                    cmd.Parameters.Add("@PageIndex",SqlDbType.Int,4).Value = startRowIndex;
+                    cmd.Parameters.Add("@PageSize",SqlDbType.Int,4).Value = maximumRows;
+                    
+                    SqlParameter recordCount = cmd.Parameters.Add("@RecordCount", SqlDbType.Int, 4);
+                    recordCount.Direction = ParameterDirection.Output;
+
+                    conn.Open();
+
+                    using(SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        //hämtar index för alla kolumner
+                        int idIndex = reader.GetOrdinal("ContactID");
+                        int fNameIndex = reader.GetOrdinal("FirstName");
+                        int lNameIndex = reader.GetOrdinal("LastName");
+                        int emailIndex = reader.GetOrdinal("EmailAddress");
+
+                        while (reader.Read())
+                        {
+                            //skapar ny kontakt och hämtar all information från tabellen.
+                            Contact contact = new Contact();
+                            contact.ContactId = reader.GetInt32(idIndex);
+                            contact.FirstName = reader.GetString(fNameIndex);
+                            contact.LastName = reader.GetString(lNameIndex);
+                            contact.EmailAddress = reader.GetString(emailIndex);
+
+                            //lägger till kontakterna i listan
+                            contacts.Add(contact);
+                        }
+                    }
+
+                    totalRowCount = (int)recordCount.Value;
+                    return contacts; 
+                }
+
+
+
+            }
+            catch
+            {
+                throw new ApplicationException("Det gick inte att hämta tillbaka kontakterna.");
             }
         }
 
@@ -200,7 +259,7 @@ namespace Aventyrliga_kontakter.Model.DAL
         }
 
         //Ta bort kontakt från databasen //EJ KLAR
-        public void DeleteContact(Contact contact)
+        public int DeleteContact(Contact contact)
         {
             try
             {
@@ -224,6 +283,7 @@ namespace Aventyrliga_kontakter.Model.DAL
 
                     //Output: Returvärdet visar om det fungerade eller inte
                     int retValue = (int)cmd.Parameters["@RetValue"].Value;
+                    return retValue;
                 }
 
             }

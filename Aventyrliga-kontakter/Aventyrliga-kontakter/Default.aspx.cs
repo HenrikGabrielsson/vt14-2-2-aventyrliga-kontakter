@@ -27,9 +27,9 @@ namespace Aventyrliga_kontakter
 
 
         //Fyller tabellen med data
-        public IEnumerable<Contact> ContactListView_GetData()
+        public IEnumerable<Contact> ContactListView_GetData(int maximumRows, int startRowIndex, out int totalRowCount)
         {
-            return Service.GetContacts();
+            return Service.GetContactsPageWise(maximumRows, startRowIndex, out totalRowCount);
         }
 
 

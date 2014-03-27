@@ -30,6 +30,10 @@ namespace Aventyrliga_kontakter.Model
             return ContactDAL.GetContactById(contactId);
         }
 
+        public IEnumerable<Contact> GetContactsPageWise(int maximumRows, int startRowIndex, out int totalRowCount)
+        {
+            return ContactDAL.GetContactsPageWise(maximumRows, startRowIndex, out totalRowCount);
+        }
 
 
         //Funktioner som tar bort kontakter 
@@ -38,6 +42,8 @@ namespace Aventyrliga_kontakter.Model
         {
             ContactDAL.DeleteContact(contact);
         }
+
+
 
         //Argument: Ett ID
         public void DeleteContact(int contactID)

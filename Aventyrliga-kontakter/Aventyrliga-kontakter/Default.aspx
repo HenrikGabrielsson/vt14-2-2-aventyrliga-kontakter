@@ -30,6 +30,10 @@
                     <td><%# Item.FirstName %></td>
                     <td><%# Item.LastName %></td>
                     <td><%# Item.EmailAddress %></td>
+                    <td class="Command">
+                        <asp:LinkButton runat="server" CommandName="Delete" Text="Ta bort" CausesValidation="false" />
+                        <asp:LinkButton runat="server" CommandName="Edit" Text="Redigera" CausesValidation="false" />
+                    </td>
                 </tr>
             </ItemTemplate>
 
