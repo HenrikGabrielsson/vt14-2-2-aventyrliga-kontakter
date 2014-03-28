@@ -28,7 +28,7 @@ namespace Aventyrliga_kontakter
         //Fyller tabellen med data
         public IEnumerable<Contact> ContactListView_GetData(int maximumRows, int startRowIndex, out int totalRowCount)
         {
-            startRowIndex += 15;
+            startRowIndex += maximumRows;
             startRowIndex = startRowIndex / maximumRows;
             return Service.GetContactsPageWise(maximumRows, startRowIndex, out totalRowCount);
         }
@@ -42,6 +42,11 @@ namespace Aventyrliga_kontakter
                 if (ModelState.IsValid)
                 {
                     Service.SaveContact(contact);
+
+                    //Visa rättmeddelande
+                    SuccessLabel.Text = String.Format("{0} {1} har lagts till!", contact.FirstName, contact.LastName);
+                    SuccessPanel.Visible = true;
+
                 }
             }
             catch
@@ -60,16 +65,21 @@ namespace Aventyrliga_kontakter
                 {
 
                     //kollar så kunden finns innan den sparas
-                    var item = Service.GetContact(contactID);
-                    if (item == null)
+                    var contact = Service.GetContact(contactID);
+                    if (contact == null)
                     {
                         ModelState.AddModelError("", String.Format("Det gick inte att uppdatera kontakten."));
                         return;
                     }
                     
-                    if (TryUpdateModel(item))
+                    if (TryUpdateModel(contact))
                     {
-                        Service.SaveContact(item);
+                        Service.SaveContact(contact);
+
+                        //Visa rättmeddelande
+                        SuccessLabel.Text = String.Format("{0} {1} har uppdaterats!", contact.FirstName, contact.LastName);
+                        SuccessPanel.Visible = true;
+
                     }
                 }
             }
@@ -86,6 +96,10 @@ namespace Aventyrliga_kontakter
             try
             {
                 Service.DeleteContact(contactID);
+
+                SuccessLabel.Text = "Kontakten har tagits bort";
+                SuccessPanel.Visible = true;
+
             }
             catch
             {

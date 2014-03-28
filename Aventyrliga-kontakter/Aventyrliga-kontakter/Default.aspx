@@ -11,12 +11,20 @@
 <body>
     <form id="form" runat="server">
     <div>
-        <asp:ValidationSummary ID="ValidationSummary1" runat="server" />
+
+        <asp:Panel ID="SuccessPanel" runat="server" Visible="false" CssClass="SuccessPanel" >
+            <asp:ImageButton ID="CloseButton" ImageUrl="~/Content/close.png" OnClientClick="return closeWindow()" runat="server" />
+            <asp:Label ID="SuccessLabel" runat="server" Text="Label"></asp:Label>
+        </asp:Panel>    
+
+        <asp:ValidationSummary ID="ValidationSummary1" runat="server" CssClass="Validation" />
+
 
         <%-- Tabellen med kontakterna --%>
         <asp:ListView ID="ContactListView" runat="server" selectMethod="ContactListView_GetData" ItemType="Aventyrliga_kontakter.Model.Contact" DataKeyNames="ContactID"
             InsertMethod="ContactListView_InsertItem" UpdateMethod="ContactListView_UpdateItem" DeleteMethod="ContactListView_DeleteItem"
             InsertItemPosition="FirstItem">
+
             <LayoutTemplate>
                 <table>
                     <tr>
@@ -34,8 +42,6 @@
                     </asp:DataPager>
 
                 </table>
-
-
             </LayoutTemplate>
 
             <%-- Items --%>
@@ -64,7 +70,6 @@
                     <td><asp:TextBox ID="EmailAddress" runat="server" Text="<%# BindItem.EmailAddress %>"></asp:TextBox></td>
 
                     <td><asp:LinkButton CommandName="Insert" Text="Lägg till" runat="server" /></td>
-                    <td><asp:LinkButton CommandName="Cancel" Text="Avbryt" CausesValidation="false" runat="server" /></td>
                     <td></td>
 
                 </tr>
@@ -77,8 +82,8 @@
                     <td><asp:TextBox ID="LastName" runat="server" Text="<%# BindItem.LastName %>"></asp:TextBox></td>
                     <td><asp:TextBox ID="EmailAddress" runat="server" Text="<%# BindItem.EmailAddress %>"></asp:TextBox></td>
 
-                    <td><asp:LinkButton CommandName="Update" Text="Lägg till" runat="server" /></td>
-                    <td></td>
+                    <td><asp:LinkButton CommandName="Update" Text="Uppdatera" runat="server" /></td>
+                    <td><asp:LinkButton CommandName="Cancel" Text="Avbryt" runat="server" /></td>
 
                 </tr>
 
