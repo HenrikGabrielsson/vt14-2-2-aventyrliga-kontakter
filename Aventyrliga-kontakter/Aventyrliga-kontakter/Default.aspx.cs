@@ -21,7 +21,16 @@ namespace Aventyrliga_kontakter
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Om ett rättsmeddelande
+            if(Session["PostOutcome"] != null)
+            {
 
+                //Visa rättmeddelande
+                SuccessLabel.Text = Session["PostOutcome"].ToString();
+                SuccessPanel.Visible = true;
+
+                Session["PostOutcome"] = null;
+            }
         }
 
 
@@ -43,9 +52,10 @@ namespace Aventyrliga_kontakter
                 {
                     Service.SaveContact(contact);
 
-                    //Visa rättmeddelande
-                    SuccessLabel.Text = String.Format("{0} {1} har lagts till!", contact.FirstName, contact.LastName);
-                    SuccessPanel.Visible = true;
+                    //Skapa rättmeddelande och spara i session
+                    Session["PostOutcome"] = String.Format("Kontakten {0} {1} har lagts till!", contact.FirstName, contact.LastName);
+                    
+                    Response.Redirect("~/");
 
                 }
             }
@@ -76,9 +86,10 @@ namespace Aventyrliga_kontakter
                     {
                         Service.SaveContact(contact);
 
-                        //Visa rättmeddelande
-                        SuccessLabel.Text = String.Format("{0} {1} har uppdaterats!", contact.FirstName, contact.LastName);
-                        SuccessPanel.Visible = true;
+                        //Skapa rättmeddelande och spara i session
+                        Session["PostOutcome"] = String.Format("Kontakten {0} {1} har uppdaterats.", contact.FirstName, contact.LastName);
+
+                        Response.Redirect("~/");
 
                     }
                 }
@@ -97,8 +108,10 @@ namespace Aventyrliga_kontakter
             {
                 Service.DeleteContact(contactID);
 
-                SuccessLabel.Text = "Kontakten har tagits bort";
-                SuccessPanel.Visible = true;
+                //Skapa rättmeddelande och spara i session
+                Session["PostOutcome"] = "Datan om kontakten har raderats.";
+
+                Response.Redirect("~/");
 
             }
             catch
