@@ -14,5 +14,4 @@ function closeWindow()
     }   
     ,false)
 
-    return false;
 }

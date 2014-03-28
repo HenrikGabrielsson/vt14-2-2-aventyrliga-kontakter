@@ -6,6 +6,7 @@
 <head runat="server">
     <title>Äventyrliga kontakter</title>
 
+    <link href="~/Style/contactStyle.css" rel="stylesheet" />
     <script type="text/javascript" src="Script/AdventureScript.js"></script>
 </head>
 <body>
@@ -13,7 +14,7 @@
     <div>
 
         <asp:Panel ID="SuccessPanel" runat="server" Visible="false" CssClass="SuccessPanel" >
-            <asp:ImageButton ID="CloseButton" ImageUrl="~/Content/close.png" OnClientClick="return closeWindow()" runat="server" />
+            <asp:ImageButton ID="CloseButton" ImageUrl="~/Content/close.png" OnClientClick="closeWindow()" runat="server" />
             <asp:Label ID="SuccessLabel" runat="server" Text="Label"></asp:Label>
         </asp:Panel>    
 
@@ -33,15 +34,16 @@
                         <th>Email-Adress</th>
                     </tr>
                     <asp:PlaceHolder ID="ItemPlaceholder" runat="server"></asp:PlaceHolder>
-                    <asp:DataPager ID="DataPager" runat="server" PageSize="15">
-                        <Fields>
-                            <asp:NextPreviousPagerField ShowFirstPageButton="true" ShowLastPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" FirstPageText="Första" ButtonType="Button" />
-                            <asp:NumericPagerField ButtonType="Button" />
-                            <asp:NextPreviousPagerField ShowLastPageButton="true" ShowFirstPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" LastPageText="Sista" ButtonType="Button" />
-                        </Fields>
-                    </asp:DataPager>
+
 
                 </table>
+                <asp:DataPager ID="DataPager" runat="server" PageSize="15">
+                    <Fields>
+                        <asp:NextPreviousPagerField ShowFirstPageButton="true" ShowLastPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" FirstPageText="Första" ButtonType="Button" />
+                        <asp:NumericPagerField ButtonType="Button" />
+                        <asp:NextPreviousPagerField ShowLastPageButton="true" ShowFirstPageButton="false" ShowNextPageButton="false" ShowPreviousPageButton="false" LastPageText="Sista" ButtonType="Button" />
+                    </Fields>
+                </asp:DataPager>
             </LayoutTemplate>
 
             <%-- Items --%>
@@ -51,7 +53,7 @@
                     <td><%# Item.LastName %></td>
                     <td><%# Item.EmailAddress %></td>
                     <td class="Command">
-                        <asp:LinkButton runat="server" CommandName="Delete" Text="Ta bort" OnClientClick="return confirmDelete()" CausesValidation="false" />
+                        <asp:LinkButton runat="server" CommandName="Delete" Text="Ta bort" OnClientClick="return confirmDelete()"/>
                         <asp:LinkButton runat="server" CommandName="Edit" Text="Redigera" CausesValidation="false" />
                     </td>
                 </tr>

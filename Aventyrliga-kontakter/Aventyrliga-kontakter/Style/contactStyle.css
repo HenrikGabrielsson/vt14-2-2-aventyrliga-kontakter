@@ -1,0 +1,46 @@
+﻿body
+{
+    font-family:Calibri;
+    font-size:12pt;
+}
+
+.Validation
+{
+    background-color:#ffa6a6;
+    border:1px solid red;
+    border-radius:10px;
+    text-align:center;
+
+    padding-top:10px;
+
+    width:800px;
+}
+
+.Validation ul
+{
+    list-style-type:none;
+}
+
+.SuccessPanel
+{
+    background-color:#b8ff8c;
+    border:1px solid green;
+    border-radius:10px;
+    text-align:center;
+
+    padding-top:10px;
+
+    width:800px;
+    height:40px;
+}
+
+.SuccessPanel input
+{
+    margin-right:5px;
+    float:right;
+}
+
+tr:nth-of-type(2n+0)
+{
+    background-color:#eaeaea;
+}
