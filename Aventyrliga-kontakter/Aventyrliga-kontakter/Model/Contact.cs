@@ -13,7 +13,7 @@ namespace Aventyrliga_kontakter.Model
 
         [Required(ErrorMessage="Du måste fylla i en Email-adress!")]
         [StringLength(50,ErrorMessage="Email-adressen får inte vara längre än 50 tecken!")]
-        [DataType(DataType.EmailAddress, ErrorMessage="Email-adressen har inte ett giltigt format!")]
+        [EmailAddress(ErrorMessage="Email-adressen måste ha ett giltigt format!")]
         public string EmailAddress { get; set; }
 
         [Required(ErrorMessage = "Du måste fylla i ett förnamn!")]

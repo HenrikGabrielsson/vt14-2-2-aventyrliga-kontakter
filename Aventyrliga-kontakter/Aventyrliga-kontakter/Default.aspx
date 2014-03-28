@@ -5,6 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Äventyrliga kontakter</title>
+
+    <script type="text/javascript" src="Script/AdventureScript.js"></script>
 </head>
 <body>
     <form id="form" runat="server">
@@ -43,7 +45,7 @@
                     <td><%# Item.LastName %></td>
                     <td><%# Item.EmailAddress %></td>
                     <td class="Command">
-                        <asp:LinkButton runat="server" CommandName="Delete" Text="Ta bort" CausesValidation="false" />
+                        <asp:LinkButton runat="server" CommandName="Delete" Text="Ta bort" OnClientClick="return confirmDelete()" CausesValidation="false" />
                         <asp:LinkButton runat="server" CommandName="Edit" Text="Redigera" CausesValidation="false" />
                     </td>
                 </tr>
